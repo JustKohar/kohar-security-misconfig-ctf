@@ -190,7 +190,6 @@ def admin():
         <input name="password" type="password" placeholder="********">
         <button class="btn" type="submit">Login</button>
     </form>
-    <p style="font-size:12px;color:#777;">(Yes, players *will* try to brute force this.)</p>
     """
     return BASE_HTML_TOP + body + BASE_HTML_BOTTOM
 
