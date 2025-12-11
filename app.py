@@ -129,6 +129,21 @@ def login():
     """
     return BASE_HTML_TOP + body + BASE_HTML_BOTTOM
 
+@app.route("/hint")
+def hint():
+    body = """
+    <h2>Hint</h2>
+    <p>If normal pages do not provide enough information, consider what systems
+    typically do with errors, logins, API calls, or other events.</p>
+
+    <p>Sometimes internal components produce very <strong>verbose logs</strong>.
+    These logs may be intended for maintenance, but not always secured correctly.</p>
+
+    <p>Try exploring the application structure or using common techniques to
+    discover <em>unlisted</em> or <em>internal-only</em> paths.</p>
+    """
+    return BASE_HTML_TOP + body + BASE_HTML_BOTTOM
+
 
 @app.route("/dashboard")
 def dashboard():
