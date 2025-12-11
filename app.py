@@ -27,6 +27,23 @@ DECOY_KEYS = [
     "k_" + secrets.token_hex(16),
 ]
 
+# ---- Seed noisy logs on import (runs under gunicorn too) ----
+logger.info("Kohar Labs system startup sequence initiated.")
+logger.warning("Deprecated authentication module still active.")
+
+# Log some decoy key usage to create noise
+for i, key in enumerate(DECOY_KEYS, start=1):
+    logger.info(
+        f"Legacy service srv-{i} called /api/data with X-API-KEY={key!r} "
+        f"from 10.0.0.{i} (status=403, key_revoked=True)"
+    )
+
+# Log ONE real key usage – this is the true leak
+logger.info(
+    f"Kohar System Agent accessed /api/data using X-API-KEY={SECRET_API_KEY!r} "
+    f"from 10.0.0.250 (status=200)"
+)
+
 # Demo “QA” login for the public login page
 DEMO_USER = "tester@kohar-ctf.local"
 DEMO_PASS = "TestPassword123!"
@@ -129,6 +146,7 @@ def login():
     </form>
     """
     return BASE_HTML_TOP + body + BASE_HTML_BOTTOM
+
 
 @app.route("/hint")
 def hint():
@@ -302,25 +320,9 @@ def debug_logs():
     return send_file(LOG_FILE, mimetype="text/plain")
 
 
-# --------- STARTUP SEED LOGS ---------
+# --------- DEV SERVER ENTRYPOINT ---------
 
 if __name__ == "__main__":
-    logger.info("Kohar Labs system startup sequence initiated.")
-    logger.warning("Deprecated authentication module still active.")
-
-    # Log some decoy key usage to create noise
-    for i, key in enumerate(DECOY_KEYS, start=1):
-        logger.info(
-            f"Legacy service srv-{i} called /api/data with X-API-KEY={key!r} "
-            f"from 10.0.0.{i} (status=403, key_revoked=True)"
-        )
-
-    # Log ONE real key usage – this is the true leak
-    logger.info(
-        f"Kohar System Agent accessed /api/data using X-API-KEY={SECRET_API_KEY!r} "
-        f"from 10.0.0.250 (status=200)"
-    )
-
-    # Use PORT env var if provided (Render/other PaaS)
+    # For local testing: `python app.py`
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
