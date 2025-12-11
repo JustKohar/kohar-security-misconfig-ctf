@@ -70,6 +70,7 @@ BASE_HTML_TOP = """
     <a href="/admin">Admin</a>
     <a href="/docs">API Docs</a>
     <a href="/ticket">Support Ticket</a>
+    <a href="/hint">Hints!</a>
   </nav>
 </header>
 <div class="container">
